@@ -7,7 +7,7 @@
 - [ ] An example View to test viewing from the server
 - [x] Code to use the model
 - [x] the main.py of the server
-- [ ] Code to manage the frames coming from the multiple devices camera
+- [x] Code to manage the frames coming from the multiple devices camera
 - [ ] Code to process and enhance the frames before using the model
 - [ ] Build the model to calculate players speed
 - [ ] Build the model to add visual effects to frames
