@@ -60,12 +60,12 @@ class ModelManager:
         results = self.model(frame)
 
         for obj in results.pandas.xyxy:
-            if obj.name == "ball"
+            if obj.name == "ball":
                 xn = obj.xmin
                 xx = obj.xmax
                 yn = obj.ymin
                 yx = obj.ymax
                 # calculate x and y of the center of the detected ball
-                cx, cy = ((xn+xx)/2,(yn+yx)/2)
+                cx, cy = ((xn + xx) / 2, (yn + yx) / 2)
                 return True, cx, cy
         return False, inf, inf
