@@ -35,9 +35,9 @@ class ModelManager:
         """
         best_frame_score = -inf
         best_frame = np.zeros(shape=frames[0].shape)
-        for frame in frames:
+        # TODO: Run using multiple threads
+        for _, frame in frames.items():
             current_score = 0
-            # TODO: Detect the ball using yolov5
             ball_detected, px, py = self.detect_ball(frame)
 
             if ball_detected:

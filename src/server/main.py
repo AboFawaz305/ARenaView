@@ -79,4 +79,5 @@ def viewer_connect():
 
 
 if __name__ == "__main__":
+    # Run flask in multi threaded mode
     app.run(threaded=True)
