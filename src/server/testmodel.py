@@ -1,9 +1,12 @@
+import os
+
 import cv2
 
 from ModelManager import *
 
-# Define the path to the video file
-VIDEO_PATH = "./v.mp4"  # Replace with your actual video file path
+# Define the paths
+VIDEO_PATH = "./v.mp4"  # Input video
+OUTPUT_PATH = "./processed_video.mp4"  # Output video
 
 # Create a VideoCapture object
 cap = cv2.VideoCapture(VIDEO_PATH)
@@ -13,35 +16,61 @@ if not cap.isOpened():
     print("Error: Could not open video.")
     exit()
 
+# Get video properties for the output file
+fps = cap.get(cv2.CAP_PROP_FPS)
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+# Initialize the model
 mm = ModelManager(None)
 
-# Read and display frames in a loop
+# Create VideoWriter object
+fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # Codec for MP4
+out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
+
+print(f"Processing video with {total_frames} frames...")
+
+# Frame counter for progress tracking
+frame_count = 0
+
+# Process and write frames to output video
 while True:
     ret, frame = cap.read()
     if not ret:
         print("Reached the end of the video or failed to read the frame.")
         break
 
-    frame, score = mm.estimate_best_view(frame)
-    # Define the text and its properties
+    # Process frame
+    processed_frame, score = mm.estimate_best_view(frame)
+
+    # Add text with score
     text = score
-    org = (10, 30)  # Coordinates for the bottom-left corner of the text
+    org = (10, 30)  # Coordinates for the text
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 1
-    color = (255, 255, 255)  # White color in BGR
+    color = (255, 255, 255)  # White in BGR
     thickness = 2
+    cv2.putText(
+        processed_frame, text, org, font, font_scale, color, thickness, cv2.LINE_AA
+    )
 
-    # Add text to the image
-    cv2.putText(frame, text, org, font, font_scale, color, thickness, cv2.LINE_AA)
+    # Write frame to output video
+    out.write(processed_frame)
 
-    # Display the current frame
-    cv2.imshow("Video Frame", frame)
+    # Show progress
+    frame_count += 1
+    if frame_count % 10 == 0:
+        progress = (frame_count / total_frames) * 100
+        print(f"Progress: {progress:.1f}% ({frame_count}/{total_frames})")
 
-    # Wait for 25 ms and check if the 'q' key is pressed to exit
-    if cv2.waitKey(25) & 0xFF == ord("q"):
-        print("Playback interrupted by user.")
-        break
-
-# Release the VideoCapture object and close display windows
+# Release resources
 cap.release()
-cv2.destroyAllWindows()
+out.release()
+print(f"Video processing complete! Output saved to {OUTPUT_PATH}")
+
+# Optional: Show file info
+if os.path.exists(OUTPUT_PATH):
+    file_size_mb = os.path.getsize(OUTPUT_PATH) / (1024 * 1024)
+    print(f"Output file size: {file_size_mb:.2f} MB")
+    print(f"Video duration: {total_frames/fps:.2f} seconds")
