@@ -6,3 +6,8 @@ The program is divided into 3 subparts the device part in the folder "device" co
 
 This code is licenced under the MIT licence for more details you can refer to the LICENCE file inside this repository.
 
+# Authors
+
+Abdulaziz Almutairi
+Omar Alnaqib
+Ibrahim Alzahem
