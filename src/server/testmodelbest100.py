@@ -6,7 +6,7 @@ from ModelManager import *
 
 # Define the paths
 VIDEO_PATH = "./v.mp4"  # Input video
-OUTPUT_PATH = "./processed_video2.mp4"  # Output video
+OUTPUT_PATH = "./processed_video.mp4"  # Output video
 
 # Create a VideoCapture object
 cap = cv2.VideoCapture(VIDEO_PATH)
@@ -46,7 +46,7 @@ while True:
 
     # Add text with score
     text = score
-    org = (10, 300)  # Coordinates for the text
+    org = (10, 30)  # Coordinates for the text
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 1
     color = (255, 255, 255)  # White in BGR

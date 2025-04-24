@@ -24,14 +24,14 @@ class ModelManager:
             goal_detected, gpx, gpy = self.detect_goal(frame)
 
             if ball_detected:
-                current_score += 100_000
+                current_score += 1_000_000
                 ball_distance_from_center = abs(bpx) + abs(bpy)
-                current_score += -10 * ball_distance_from_center
+                current_score += -1 * ball_distance_from_center
 
             if goal_detected:
-                current_score += 10_000
+                current_score += 100_000
                 goal_distance_from_center = abs(gpx) + abs(gpy)
-                current_score += -10 * goal_distance_from_center
+                current_score += -1 * goal_distance_from_center
 
             if current_score > best_frame_score:
                 best_frame_score = current_score

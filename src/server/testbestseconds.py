@@ -1,4 +1,6 @@
 import os
+import sys
+from math import ceil, inf
 
 import cv2
 
@@ -34,6 +36,34 @@ print(f"Processing video with {total_frames} frames...")
 # Frame counter for progress tracking
 frame_count = 0
 
+
+def annotate_frame(frame, score):
+    # Add text with score
+    text = str(score)
+    org = (10, 150)  # Coordinates for the text
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1
+    color = (255, 255, 255)  # White in BGR
+    thickness = 2
+    cv2.putText(frame, text, org, font, font_scale, color, thickness, cv2.LINE_AA)
+
+
+def init_array(size):
+    array = []
+    for i in range(size):
+        array.append((-inf, None))
+    return array
+
+
+def write_video(frames):
+    for _, f in frames:
+        # Write frame to output video
+        out.write(f)
+
+
+size = ceil(fps) * int(sys.argv[1])
+frames_scores = init_array(size)
+
 # Process and write frames to output video
 while True:
     ret, frame = cap.read()
@@ -42,27 +72,21 @@ while True:
         break
 
     # Process frame
-    processed_frame, score = mm.estimate_best_view(frame)
+    frame, cscore = mm.estimate_best_view(frame)
+    cscore = float(cscore)
 
-    # Add text with score
-    text = score
-    org = (10, 300)  # Coordinates for the text
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    font_scale = 1
-    color = (255, 255, 255)  # White in BGR
-    thickness = 2
-    cv2.putText(
-        processed_frame, text, org, font, font_scale, color, thickness, cv2.LINE_AA
-    )
-
-    # Write frame to output video
-    out.write(processed_frame)
+    if cscore >= frames_scores[0][0]:
+        annotate_frame(frame, cscore)
+        frames_scores[0] = (cscore, frame)
+        frames_scores.sort(key=lambda fs: fs[0])
 
     # Show progress
     frame_count += 1
     if frame_count % 10 == 0:
         progress = (frame_count / total_frames) * 100
         print(f"Progress: {progress:.1f}% ({frame_count}/{total_frames})")
+
+write_video(frames_scores)
 
 # Release resources
 cap.release()
