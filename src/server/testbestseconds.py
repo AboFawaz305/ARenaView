@@ -56,7 +56,7 @@ def init_array(size):
 
 
 def write_video(frames):
-    for _, f in frames:
+    for _, _, f in frames:
         # Write frame to output video
         out.write(f)
 
