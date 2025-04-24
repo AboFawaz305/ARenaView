@@ -51,7 +51,7 @@ def annotate_frame(frame, score):
 def init_array(size):
     array = []
     for i in range(size):
-        array.append((-inf, None))
+        array.append((-inf, 0, None))
     return array
 
 
@@ -63,6 +63,7 @@ def write_video(frames):
 
 size = ceil(fps) * int(sys.argv[1])
 frames_scores = init_array(size)
+i=0
 
 # Process and write frames to output video
 while True:
@@ -77,15 +78,16 @@ while True:
 
     if cscore >= frames_scores[0][0]:
         annotate_frame(frame, cscore)
-        frames_scores[0] = (cscore, frame)
+        frames_scores[0] = (cscore, i, frame)
         frames_scores.sort(key=lambda fs: fs[0])
-
+    i+=1
     # Show progress
     frame_count += 1
     if frame_count % 10 == 0:
         progress = (frame_count / total_frames) * 100
         print(f"Progress: {progress:.1f}% ({frame_count}/{total_frames})")
 
+frames_scores.sort(key=lambda fs: fs[1])
 write_video(frames_scores)
 
 # Release resources
