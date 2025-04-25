@@ -1,3 +1,4 @@
+#!/bin/python
 import os
 import sys
 from math import ceil, inf
@@ -7,8 +8,8 @@ import cv2
 from ModelManager import *
 
 # Define the paths
-VIDEO_PATH = "./v.mp4"  # Input video
-OUTPUT_PATH = "./processed_video2.mp4"  # Output video
+VIDEO_PATH = sys.argv[2] #"./vvv.mp4"  # Input video
+OUTPUT_PATH = sys.argv[3] # "./vvv_out.mp4"  # Output video
 
 # Create a VideoCapture object
 cap = cv2.VideoCapture(VIDEO_PATH)
@@ -63,7 +64,7 @@ def write_video(frames):
 
 size = ceil(fps) * int(sys.argv[1])
 frames_scores = init_array(size)
-i=0
+i = 0
 
 # Process and write frames to output video
 while True:
@@ -80,7 +81,7 @@ while True:
         annotate_frame(frame, cscore)
         frames_scores[0] = (cscore, i, frame)
         frames_scores.sort(key=lambda fs: fs[0])
-    i+=1
+    i += 1
     # Show progress
     frame_count += 1
     if frame_count % 10 == 0:
